@@ -5,9 +5,10 @@ volumes:
 
 services:
   cointracker:
+    restart: always
     build:
       context: .
     env_file:
       - .env
     volumes:
-      - ${PWD}:/opt/cointracker
+      - ${PWD}/cointracker:/opt/cointracker/

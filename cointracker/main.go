@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"cointracker/config"
+	"github.com/canhlinh/cointracker/config"
 
 	socket "github.com/marcos-gonalons/tradingview-scraper/v2"
 )

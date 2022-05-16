@@ -5,6 +5,6 @@ RUN wget -q https://github.com/markbates/refresh/releases/download/v1.4.11/refre
     && tar -xzf refresh_1.4.11_linux_amd64.tar.gz && mv refresh /usr/local/bin/refresh && chmod u+x /usr/local/bin/refresh
 
 WORKDIR /opt/cointracker
-COPY . .
+COPY ./cointracker .
 
 CMD ["refresh", "-c", "refresh.yml"]
