@@ -14,7 +14,7 @@ import (
 	socket "github.com/marcos-gonalons/tradingview-scraper/v2"
 )
 
-var TickerDuration = time.Hour
+var TickerDuration = time.Minute * 30
 
 type Price struct {
 	LastTimePrice float64
@@ -23,7 +23,7 @@ type Price struct {
 
 func main() {
 	ticker := time.NewTicker(time.Minute)
-	m := map[string]Price{}
+	symbols := map[string]Price{}
 	look := &sync.Mutex{}
 
 	tradingviewsocket, err := socket.Connect(
@@ -31,13 +31,13 @@ func main() {
 			if data.Price != nil {
 				currentPrice := *data.Price
 				look.Lock()
-				price := m[symbol]
+				price := symbols[symbol]
 				lastTimePrice := price.LastTimePrice
 				if lastTimePrice == 0 {
 					lastTimePrice = currentPrice
 				}
 
-				m[symbol] = Price{
+				symbols[symbol] = Price{
 					CurrentPrice:  currentPrice,
 					LastTimePrice: lastTimePrice,
 				}
@@ -47,11 +47,12 @@ func main() {
 
 			select {
 			case <-ticker.C:
-				if time.Now().Minute() == 0 {
+				m := time.Now().Minute()
+				if m == 0 || m == 30 {
 					ticker.Reset(TickerDuration)
 
 					look.Lock()
-					price := m[symbol]
+					price := symbols[symbol]
 					if price.CurrentPrice > 0 {
 						if price.CurrentPrice > price.LastTimePrice {
 							priceChanged := (price.CurrentPrice - price.LastTimePrice) / price.CurrentPrice * 100
@@ -60,7 +61,7 @@ func main() {
 							}
 						}
 					}
-					m[symbol] = Price{
+					symbols[symbol] = Price{
 						CurrentPrice:  price.CurrentPrice,
 						LastTimePrice: price.CurrentPrice,
 					}
