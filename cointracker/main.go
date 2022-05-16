@@ -81,7 +81,7 @@ func main() {
 	}
 	for _, symbol := range config.Config().Symbols {
 		tradingviewsocket.AddSymbol(symbol)
-		m[symbol] = Price{}
+		symbols[symbol] = Price{}
 	}
 
 	for i := 0; i < 1; {
