@@ -12,7 +12,7 @@ import (
 
 	"github.com/canhlinh/cointracker/config"
 
-	socket "github.com/marcos-gonalons/tradingview-scraper/v2"
+	socket "github.com/canhlinh/tradingview-scraper/v2"
 )
 
 var TickerDuration = time.Minute * 30
