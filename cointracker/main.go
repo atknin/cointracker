@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
 	"math"
 	"net/http"
 	"sync"
@@ -42,7 +43,7 @@ func main() {
 					LastTimePrice: lastTimePrice,
 				}
 				look.Unlock()
-				fmt.Printf("%v %v\n", symbol, currentPrice)
+				log.Printf("%v %v\n", symbol, currentPrice)
 			}
 
 			select {
@@ -72,12 +73,11 @@ func main() {
 			}
 		},
 		func(err error, context string) {
-			fmt.Printf("%#v", "error -> "+err.Error())
-			fmt.Printf("%#v", "context -> "+context)
+			log.Panicf("error -> %#v context-> %v \n", err.Error(), context)
 		},
 	)
 	if err != nil {
-		panic("Error while initializing the trading view socket -> " + err.Error())
+		log.Panicf("Error while initializing the trading view socket -> \n" + err.Error())
 	}
 	for _, symbol := range config.Config().Symbols {
 		tradingviewsocket.AddSymbol(symbol)
@@ -95,7 +95,7 @@ type TelegramMessage struct {
 }
 
 func sendTelegramMessage(symbol string, priceChanged float64, currentPrice float64) {
-	fmt.Println("sending telegram message", symbol, priceChanged, currentPrice)
+	log.Println("sending telegram message", symbol, priceChanged, currentPrice)
 
 	priceChangedFormat := fmt.Sprintf("%.2f%%", priceChanged)
 	if priceChanged > 0 {
